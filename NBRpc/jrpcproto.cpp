@@ -2,6 +2,11 @@
 
 namespace Nano {
 	namespace JrpcProto {
+		JsonRpcRequest::JsonRpcRequest(const Json::Value& rpcRequest) : m_rpcRequest(rpcRequest)
+		{
+
+		}
+
 		JsonRpcRequest::JsonRpcRequest(std::string jsonrpcVersion, std::string methodName, Json::Value parameters, std::string requestId)
 		{
 			/// JSON-RPC 2.0: A Request object that is a method call is identified by the presence of an "id" member
@@ -156,7 +161,7 @@ namespace Nano {
 			}
 		}
 
-		inline int JsonRpcError::toInt(JsonRpcErrorCode code)
+		int JsonRpcError::toInt(JsonRpcErrorCode code)
 		{
 			return static_cast<int>(code);
 		}
@@ -173,6 +178,10 @@ namespace Nano {
 			m_rpcResponse["jsonrpc"] = jsonrpcVersion;
 			m_rpcResponse["error"] = error.toJson();
 			m_rpcResponse["id"] = "";
+		}
+
+		JsonRpcResponse::JsonRpcResponse(const Json::Value& rpcResponse) :m_rpcResponse(rpcResponse)
+		{
 		}
 
 		Json::Value JsonRpcResponse::toJson() const
@@ -268,6 +277,17 @@ namespace Nano {
 			}
 		}
 
+		JsonRpcRequest::Ptr JsonRpcRequestFactory::createFromJson(const Json::Value& json, bool* flag)
+		{
+			if (!JsonRpcRequestFactory::fieldsExist(json))
+			{
+				*flag = false;
+				return nullptr;
+			}
+			*flag = true;
+			return std::make_shared<JsonRpcRequest>(json);
+		}
+
 		inline bool JsonRpcRequestFactory::fieldsExist(const Json::Value& rpcRequestJson)
 		{
 			if (!rpcRequestJson.isMember("jsonrpc") || !rpcRequestJson["jsonrpc"].isString()) {
@@ -327,6 +347,17 @@ namespace Nano {
 			return std::make_shared<JsonRpcResponse>(version, error);
 		}
 
+		JsonRpcResponse::Ptr JsonRpcResponseFactory::createFromJson(const Json::Value& json, bool* flag)
+		{
+			if (!JsonRpcResponseFactory::fieldsExist(json))
+			{
+				*flag = false;
+				return nullptr;
+			}
+			*flag = true;
+			return std::make_shared<JsonRpcResponse>(json);
+		}
+
 		inline bool JsonRpcResponseFactory::fieldsExist(const Json::Value& rpcresponseJson)
 		{
 			if (!rpcresponseJson.isMember("jsonrpc") || !rpcresponseJson.isMember("id"))
@@ -345,6 +376,27 @@ namespace Nano {
 				return false;
 			}
 			return true;
+		}
+
+		JsonRpcError::Ptr JsonRpcErrorFactory::createFromErrorCodeEnum(JsonRpcError::JsonRpcErrorCode code)
+		{
+			return std::make_shared<JsonRpcError>(code);
+		}
+
+		JsonRpcError::Ptr JsonRpcErrorFactory::createFromInt(int code)
+		{
+			if (code == 0)
+				return std::make_shared<JsonRpcError>(JsonRpcError::JsonRpcErrorCode::ParseError);
+			else if(code == 1)
+				return std::make_shared<JsonRpcError>(JsonRpcError::JsonRpcErrorCode::InvalidRequest);
+			else if(code == 2)
+				return std::make_shared<JsonRpcError>(JsonRpcError::JsonRpcErrorCode::MethodNotFound);
+			else if(code == 3)
+				return std::make_shared<JsonRpcError>(JsonRpcError::JsonRpcErrorCode::InvalidParams);
+			else if(code == 4)
+				return std::make_shared<JsonRpcError>(JsonRpcError::JsonRpcErrorCode::InternalError);
+			else
+				return std::make_shared<JsonRpcError>(JsonRpcError::JsonRpcErrorCode::InternalError);
 		}
 	}
 }

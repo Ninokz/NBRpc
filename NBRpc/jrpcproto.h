@@ -19,7 +19,11 @@ namespace Nano {
 			typedef std::shared_ptr<JsonRpcRequest> Ptr;
 			using ParameterName = std::string;
 			using ParameterValue = Json::Value;
+		private:
+			JsonRpcRequest() = delete;
 		public:
+			JsonRpcRequest(const Json::Value& rpcRequest);
+
 			JsonRpcRequest(std::string jsonrpcVersion, std::string methodName, Json::Value parametersNameWithValue, std::string requestId);
 
 			JsonRpcRequest(std::string jsonrpcVersion, std::string methodName, Json::Value parametersNameWithValue);
@@ -56,6 +60,8 @@ namespace Nano {
 			static JsonRpcRequest::Ptr createNotifyCallRequest(const std::string& version, const std::string& method, std::unordered_map<std::string, Json::Value> params);
 
 			static JsonRpcRequest::Ptr createFromJsonStr(const std::string& jsonStr, bool* flag);
+
+			static JsonRpcRequest::Ptr createFromJson(const Json::Value& json, bool* flag);
 
 			template <typename... Args>
 			static JsonRpcRequest::Ptr createReturnCallRequest(const std::string& version, const std::string& method, const std::string id, const Args&... args) {
@@ -105,17 +111,26 @@ namespace Nano {
 
 			static std::string getErrorMessage(JsonRpcErrorCode code);
 
-			static inline int toInt(JsonRpcErrorCode code);
+			static int toInt(JsonRpcErrorCode code);
 		private:
 			Json::Value m_rpcError;
+		};
+
+		class JsonRpcErrorFactory {
+		public:
+			static JsonRpcError::Ptr createFromErrorCodeEnum(JsonRpcError::JsonRpcErrorCode code);
+			static JsonRpcError::Ptr createFromInt(int code);
 		};
 
 		class JsonRpcResponse {
 		public:
 			typedef std::shared_ptr<JsonRpcResponse> Ptr;
+		private:
+			JsonRpcResponse() = delete;
 		public:
 			JsonRpcResponse(std::string jsonrpcVersion, std::string requestId, const Json::Value result);
 			JsonRpcResponse(std::string jsonrpcVersion, const JsonRpcError& error);
+			JsonRpcResponse(const Json::Value& rpcResponse);
 
 			Json::Value toJson() const;
 
@@ -132,11 +147,13 @@ namespace Nano {
 			Json::Value m_rpcResponse;
 		};
 	
-		class JsonRpcResponseFactory {
+		class JsonRpcResponseFactory 
+		{
 		public:
 			static JsonRpcResponse::Ptr createFromJsonStr(const std::string& jsonStr, bool* flag);
 			static JsonRpcResponse::Ptr createResult(const Json::Value& request, const Json::Value result, bool* flag);
 			static JsonRpcResponse::Ptr createErrorResponse(const std::string version, const JsonRpcError& error);
+			static JsonRpcResponse::Ptr createFromJson(const Json::Value& json, bool* flag);
 		private:
 			static inline bool fieldsExist(const Json::Value& rpcresponseJson);
 		};

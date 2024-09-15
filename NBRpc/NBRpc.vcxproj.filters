@@ -96,6 +96,15 @@
     <ClCompile Include="jrpcproto.cpp">
       <Filter>源文件\rpc</Filter>
     </ClCompile>
+    <ClCompile Include="rpcservice.cpp">
+      <Filter>源文件\rpc</Filter>
+    </ClCompile>
+    <ClCompile Include="rpcserver.cpp">
+      <Filter>源文件\rpc</Filter>
+    </ClCompile>
+    <ClCompile Include="rpcclient.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="concurrentqueue.h">
@@ -160,6 +169,21 @@
     </ClInclude>
     <ClInclude Include="jrpcproto.h">
       <Filter>头文件\rpc</Filter>
+    </ClInclude>
+    <ClInclude Include="rpcexception.h">
+      <Filter>头文件\rpc</Filter>
+    </ClInclude>
+    <ClInclude Include="rpcprocedure.h">
+      <Filter>头文件\rpc</Filter>
+    </ClInclude>
+    <ClInclude Include="rpcservice.h">
+      <Filter>头文件\rpc</Filter>
+    </ClInclude>
+    <ClInclude Include="rpcserver.h">
+      <Filter>头文件\rpc</Filter>
+    </ClInclude>
+    <ClInclude Include="rpcclient.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

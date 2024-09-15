@@ -8,6 +8,21 @@ namespace Nano
 {
 	namespace Communication
 	{
+		static inline bool encode(const std::string& str, char** buffer, int* len) {
+			size_t length = str.size();
+			if (length > INT32_MAX)
+				throw std::runtime_error("buffer size is too large");
+			*len = static_cast<int>(length);
+			*buffer = new char[length];
+			memcpy(*buffer, str.c_str(), length);
+			return true;
+		}
+
+		static inline std::string decode(const char* buffer, int len) {
+			std::string str(buffer, len);
+			return std::move(str);
+		}
+
 		class Packet
 		{
 		public:

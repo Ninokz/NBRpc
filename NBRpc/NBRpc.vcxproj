@@ -144,6 +144,9 @@
     <ClCompile Include="mutex.cpp" />
     <ClCompile Include="packet.cpp" />
     <ClCompile Include="parrallenThreadPool.cpp" />
+    <ClCompile Include="rpcclient.cpp" />
+    <ClCompile Include="rpcserver.cpp" />
+    <ClCompile Include="rpcservice.cpp" />
     <ClCompile Include="session.cpp" />
     <ClCompile Include="sessionmanager.cpp" />
     <ClCompile Include="simplethreadpool.cpp" />
@@ -166,6 +169,11 @@
     <ClInclude Include="nocopyable.h" />
     <ClInclude Include="packet.h" />
     <ClInclude Include="parrallenThreadPool.h" />
+    <ClInclude Include="rpcclient.h" />
+    <ClInclude Include="rpcexception.h" />
+    <ClInclude Include="rpcprocedure.h" />
+    <ClInclude Include="rpcserver.h" />
+    <ClInclude Include="rpcservice.h" />
     <ClInclude Include="session.h" />
     <ClInclude Include="sessionmanager.h" />
     <ClInclude Include="simplethreadpool.h" />
