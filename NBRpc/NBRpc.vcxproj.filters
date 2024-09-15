@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="头文件\nblib">
+      <UniqueIdentifier>{2e89fa2a-e340-422e-b046-d883e1c00d62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\nblib">
+      <UniqueIdentifier>{3e214879-37f7-4dd4-87f8-a10a92020be4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\nblib\concurrency">
+      <UniqueIdentifier>{09d31cfc-0113-4210-b3df-8c1de520e40c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\nblib\concurrency">
+      <UniqueIdentifier>{92ff14c3-2e2a-4469-a2fc-19ac7f2ee0a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\nblib\su">
+      <UniqueIdentifier>{4c91b595-3a55-4cd3-8cf1-3d7e86500c7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\nblib\su">
+      <UniqueIdentifier>{4f76933b-4e94-4836-850d-fe41cad4cb6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\nblib\net">
+      <UniqueIdentifier>{4546e6e3-288c-444b-b06b-b6877941c3bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\nblib\net">
+      <UniqueIdentifier>{c92d1920-9a60-4d17-becb-588dd786f7c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\rpc">
+      <UniqueIdentifier>{b3e64831-aed5-4f53-aa03-08a3b2101fec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\rpc">
+      <UniqueIdentifier>{afac68a4-7a7c-4bd8-91e9-f4cd474899be}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="mutex.cpp">
+      <Filter>源文件\nblib\concurrency</Filter>
+    </ClCompile>
+    <ClCompile Include="parrallenThreadPool.cpp">
+      <Filter>源文件\nblib\concurrency</Filter>
+    </ClCompile>
+    <ClCompile Include="simplethreadpool.cpp">
+      <Filter>源文件\nblib\concurrency</Filter>
+    </ClCompile>
+    <ClCompile Include="stealThreadPool.cpp">
+      <Filter>源文件\nblib\concurrency</Filter>
+    </ClCompile>
+    <ClCompile Include="log.cpp">
+      <Filter>源文件\nblib\su</Filter>
+    </ClCompile>
+    <ClCompile Include="env.cpp">
+      <Filter>源文件\nblib\su</Filter>
+    </ClCompile>
+    <ClCompile Include="config.cpp">
+      <Filter>源文件\nblib\su</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="baseclient.cpp">
+      <Filter>源文件\nblib\net</Filter>
+    </ClCompile>
+    <ClCompile Include="baseserver.cpp">
+      <Filter>源文件\nblib\net</Filter>
+    </ClCompile>
+    <ClCompile Include="ceventhandler.cpp">
+      <Filter>源文件\nblib\net</Filter>
+    </ClCompile>
+    <ClCompile Include="conacceptor.cpp">
+      <Filter>源文件\nblib\net</Filter>
+    </ClCompile>
+    <ClCompile Include="ioservicepool.cpp">
+      <Filter>源文件\nblib\net</Filter>
+    </ClCompile>
+    <ClCompile Include="packet.cpp">
+      <Filter>源文件\nblib\net</Filter>
+    </ClCompile>
+    <ClCompile Include="session.cpp">
+      <Filter>源文件\nblib\net</Filter>
+    </ClCompile>
+    <ClCompile Include="sessionmanager.cpp">
+      <Filter>源文件\nblib\net</Filter>
+    </ClCompile>
+    <ClCompile Include="jrpcproto.cpp">
+      <Filter>源文件\rpc</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="concurrentqueue.h">
+      <Filter>头文件\nblib\concurrency</Filter>
+    </ClInclude>
+    <ClInclude Include="functionwrapper.h">
+      <Filter>头文件\nblib\concurrency</Filter>
+    </ClInclude>
+    <ClInclude Include="ioservicepool.h">
+      <Filter>头文件\nblib\concurrency</Filter>
+    </ClInclude>
+    <ClInclude Include="jointhreads.h">
+      <Filter>头文件\nblib\concurrency</Filter>
+    </ClInclude>
+    <ClInclude Include="mutex.h">
+      <Filter>头文件\nblib\concurrency</Filter>
+    </ClInclude>
+    <ClInclude Include="parrallenThreadPool.h">
+      <Filter>头文件\nblib\concurrency</Filter>
+    </ClInclude>
+    <ClInclude Include="stealThreadPool.h">
+      <Filter>头文件\nblib\concurrency</Filter>
+    </ClInclude>
+    <ClInclude Include="singleton.h">
+      <Filter>头文件\nblib\su</Filter>
+    </ClInclude>
+    <ClInclude Include="log.h">
+      <Filter>头文件\nblib\su</Filter>
+    </ClInclude>
+    <ClInclude Include="env.h">
+      <Filter>头文件\nblib\su</Filter>
+    </ClInclude>
+    <ClInclude Include="config.h">
+      <Filter>头文件\nblib\su</Filter>
+    </ClInclude>
+    <ClInclude Include="nocopyable.h">
+      <Filter>头文件\nblib\su</Filter>
+    </ClInclude>
+    <ClInclude Include="simplethreadpool.h">
+      <Filter>头文件\nblib\concurrency</Filter>
+    </ClInclude>
+    <ClInclude Include="baseclient.h">
+      <Filter>头文件\nblib\net</Filter>
+    </ClInclude>
+    <ClInclude Include="baseserver.h">
+      <Filter>头文件\nblib\net</Filter>
+    </ClInclude>
+    <ClInclude Include="ceventhandler.h">
+      <Filter>头文件\nblib\net</Filter>
+    </ClInclude>
+    <ClInclude Include="conacceptor.h">
+      <Filter>头文件\nblib\net</Filter>
+    </ClInclude>
+    <ClInclude Include="packet.h">
+      <Filter>头文件\nblib\net</Filter>
+    </ClInclude>
+    <ClInclude Include="session.h">
+      <Filter>头文件\nblib\net</Filter>
+    </ClInclude>
+    <ClInclude Include="sessionmanager.h">
+      <Filter>头文件\nblib\net</Filter>
+    </ClInclude>
+    <ClInclude Include="jrpcproto.h">
+      <Filter>头文件\rpc</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
