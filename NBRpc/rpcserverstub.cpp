@@ -2,9 +2,8 @@
 
 namespace Nano {
 	namespace Rpc {
-		RpcServerStub::RpcServerStub(short port):m_rpcServer(Rpc::RpcServerFactory::create(port))
+		RpcServerStub::RpcServerStub(short port) :m_rpcServer(Rpc::RpcServerFactory::create(port))
 		{
-			
 		}
 
 		RpcServerStub::~RpcServerStub()

@@ -13,7 +13,6 @@ namespace Nano {
 
 		Session::~Session()
 		{
-
 		}
 
 		void Session::start()

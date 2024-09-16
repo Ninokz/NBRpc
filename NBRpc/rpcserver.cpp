@@ -85,7 +85,7 @@ namespace Nano {
 							handleJsonRpcErrorException(sender, errorResponse);
 						}
 					});
-			});
+				});
 		}
 
 		void RpcServer::handleProcedureNotify(std::shared_ptr<Communication::Session> sender, JrpcProto::JsonRpcRequest::Ptr request)
@@ -95,7 +95,7 @@ namespace Nano {
 				std::string method = request->getMethod();
 				Json::Value reqJson = request->toJson();
 				this->m_rpcService->callProcedureNotify(method, reqJson);
-			});
+				});
 		}
 
 		void RpcServer::handleJsonRpcErrorException(std::shared_ptr<Communication::Session> sender, JrpcProto::JsonRpcError::Ptr error)

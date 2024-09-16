@@ -8,7 +8,6 @@ namespace Nano {
 
 		RpcClientStub::~RpcClientStub()
 		{
-			
 		}
 
 		void RpcClientStub::rpcReturnCall(std::string ip, short port, std::string id, std::string methodName,
@@ -32,7 +31,7 @@ namespace Nano {
 				this->m_rpcClient->callReturnProcedure(request, callback);
 				std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds_timeout));
 				m_rpcClient->disconnect();
-			});
+				});
 		}
 
 		void RpcClientStub::rpcNotifyCall(std::string ip, short port, std::string methodName, std::unordered_map<std::string, Json::Value> params)
@@ -50,7 +49,7 @@ namespace Nano {
 			Nano::Concurrency::SimpleThreadPool::GetInstance()->submit([this, request]() {
 				this->m_rpcClient->callNotifyProcedure(request);
 				m_rpcClient->disconnect();
-			});
+				});
 		}
 
 		CallRecord::Ptr RpcClientStub::getReturnCallRecord(const std::string& id) {

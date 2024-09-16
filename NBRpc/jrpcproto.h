@@ -146,8 +146,8 @@ namespace Nano {
 		private:
 			Json::Value m_rpcResponse;
 		};
-	
-		class JsonRpcResponseFactory 
+
+		class JsonRpcResponseFactory
 		{
 		public:
 			static JsonRpcResponse::Ptr createFromJsonStr(const std::string& jsonStr, bool* flag);

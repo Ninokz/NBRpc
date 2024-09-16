@@ -438,7 +438,6 @@ namespace Nano {
 			}
 		}
 
-
 #pragma endregion
 
 #pragma region Async
@@ -529,6 +528,6 @@ namespace Nano {
 			m_loggers[name] = logger;
 			return logger;
 		}
-#pragma endregion	
+#pragma endregion
 	}
 }

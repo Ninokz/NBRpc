@@ -42,7 +42,7 @@ namespace Nano {
 			}
 #endif
 		}
-		
+
 		void EnvMgr::addEnvVar(const std::string& key, const std::string& value) {
 			m_envVars[key] = value;
 		}

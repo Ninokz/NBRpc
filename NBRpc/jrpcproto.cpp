@@ -4,7 +4,6 @@ namespace Nano {
 	namespace JrpcProto {
 		JsonRpcRequest::JsonRpcRequest(const Json::Value& rpcRequest) : m_rpcRequest(rpcRequest)
 		{
-
 		}
 
 		JsonRpcRequest::JsonRpcRequest(std::string jsonrpcVersion, std::string methodName, Json::Value parameters, std::string requestId)
@@ -387,13 +386,13 @@ namespace Nano {
 		{
 			if (code == 0)
 				return std::make_shared<JsonRpcError>(JsonRpcError::JsonRpcErrorCode::ParseError);
-			else if(code == 1)
+			else if (code == 1)
 				return std::make_shared<JsonRpcError>(JsonRpcError::JsonRpcErrorCode::InvalidRequest);
-			else if(code == 2)
+			else if (code == 2)
 				return std::make_shared<JsonRpcError>(JsonRpcError::JsonRpcErrorCode::MethodNotFound);
-			else if(code == 3)
+			else if (code == 3)
 				return std::make_shared<JsonRpcError>(JsonRpcError::JsonRpcErrorCode::InvalidParams);
-			else if(code == 4)
+			else if (code == 4)
 				return std::make_shared<JsonRpcError>(JsonRpcError::JsonRpcErrorCode::InternalError);
 			else
 				return std::make_shared<JsonRpcError>(JsonRpcError::JsonRpcErrorCode::InternalError);

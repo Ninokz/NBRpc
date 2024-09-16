@@ -10,7 +10,7 @@ namespace Nano {
 			if (it == m_procedureReturn.end())
 				throw RpcException(JrpcProto::JsonRpcError::toInt(JrpcProto::JsonRpcError::JsonRpcErrorCode::MethodNotFound),
 					JrpcProto::JsonRpcError::getErrorMessage(JrpcProto::JsonRpcError::JsonRpcErrorCode::MethodNotFound));
-			if(it->second)
+			if (it->second)
 				it->second->invoke(request, done);
 			else
 				throw RpcException(JrpcProto::JsonRpcError::toInt(JrpcProto::JsonRpcError::JsonRpcErrorCode::InternalError),
@@ -24,7 +24,7 @@ namespace Nano {
 			if (it == m_procedureNotfiy.end())
 				throw RpcException(JrpcProto::JsonRpcError::toInt(JrpcProto::JsonRpcError::JsonRpcErrorCode::MethodNotFound),
 					JrpcProto::JsonRpcError::getErrorMessage(JrpcProto::JsonRpcError::JsonRpcErrorCode::MethodNotFound));
-			if(it->second)
+			if (it->second)
 				it->second->invoke(request);
 			else
 				throw RpcException(JrpcProto::JsonRpcError::toInt(JrpcProto::JsonRpcError::JsonRpcErrorCode::InternalError),

@@ -22,7 +22,6 @@
 #include "rpcexception.h"
 #include "nocopyable.h"
 
-
 namespace Nano {
 	namespace Rpc {
 		class CallRecord : public Noncopyable
@@ -43,7 +42,7 @@ namespace Nano {
 			public std::enable_shared_from_this<RpcClient>
 		{
 			friend class RpcClientFactory;
-		public:	
+		public:
 			typedef std::shared_ptr<RpcClient> Ptr;
 			typedef std::unordered_map<std::string, std::pair<CallRecord::Ptr, ProcedureDoneCallback>> CallRecordMap;
 		protected:

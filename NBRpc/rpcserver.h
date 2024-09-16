@@ -28,7 +28,7 @@ namespace Nano {
 		protected:
 			RpcServer(short port);
 			void Init();
-		public:	
+		public:
 			virtual ~RpcServer();
 			void addProcedureReturn(std::string methodName, RpcService::ProcedureReturnUniqPtr p);
 			void addProcedureNotify(std::string methodName, RpcService::ProcedureNotifyUniqPtr p);
