@@ -8,6 +8,10 @@ namespace Nano {
 
 		RpcClientStub::~RpcClientStub()
 		{
+			if (m_connected)
+			{
+				disconnect();
+			}
 		}
 
 		bool RpcClientStub::connect(std::string ip, short port)
