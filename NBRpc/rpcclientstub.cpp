@@ -12,7 +12,6 @@ namespace Nano {
 
 		bool RpcClientStub::connect(std::string ip, short port)
 		{
-			std::lock_guard<std::mutex> lock(m_connectedMutex);
 			if (!m_connected)
 			{
 				if (m_rpcClient->connect(ip, port))
@@ -34,7 +33,6 @@ namespace Nano {
 
 		void RpcClientStub::disconnect()
 		{
-			std::lock_guard<std::mutex> lock(m_connectedMutex);
 			m_rpcClient->disconnect();
 			m_connected = false;
 		}
