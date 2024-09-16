@@ -5,7 +5,7 @@
 
 #include <json/json.h>
 
-/// hello world test case
+/// hello world test case once
 
 void helloworldReturnService(Json::Value& request, const Nano::Rpc::ProcedureDoneCallback& done) {
 	Json::Value result = "Hello, " + request["params"]["name"].asString() + "!";
@@ -20,7 +20,6 @@ void RpcServerStubHelloWorldTest() {
 	std::unordered_map<std::string, Json::ValueType> paramsNameTypesMap = {
 	  {"name", Json::ValueType::stringValue}
 	};
-
 	rpcServerStub->registReturn("helloworldMethod", paramsNameTypesMap, helloworldReturnService);
 	rpcServerStub->run();
 	system("pause");
@@ -32,15 +31,14 @@ void helloworldCallback(Json::Value response) {
 };
 
 void ClientStubHelloWorldTest() {
-	Nano::Rpc::RpcClientStub::Ptr rpcClientStub = std::make_shared<Nano::Rpc::RpcClientStub>();
 	std::unordered_map<std::string, Json::Value> params = {
 	  {"name", "World"}
 	};
-	rpcClientStub->rpcReturnCall("127.0.0.1", 9800, "1", "helloworldMethod", params, helloworldCallback, 3000);
-	system("pause");
+	auto result = Nano::Rpc::RpcClientStub::rpcReturnCallOnce("127.0.0.1", 9800, "1", "helloworldMethod", params, helloworldCallback, 3000);
+	std::cout << result->response->getResult().asString() << std::endl;
 }
 
-//// Substract Test Case
+//// Substract Test Case once
 
 void substractReturnService(Json::Value& request, const Nano::Rpc::ProcedureDoneCallback& done) {
 	int subtrahend = request["params"]["subtrahend"].asInt();
@@ -70,25 +68,24 @@ void substractCallback(Json::Value response) {
 };
 
 void ClientStubSubstractTest() {
-	Nano::Rpc::RpcClientStub::Ptr rpcClientStub = std::make_shared<Nano::Rpc::RpcClientStub>();
 	std::unordered_map<std::string, Json::Value> params = {
 	  {"subtrahend", 23},
 	  {"minuend", 42}
 	};
-	rpcClientStub->rpcReturnCall("127.0.0.1", 9800, "1", "substractMethod", params, substractCallback, 3000);
+	auto result = Nano::Rpc::RpcClientStub::rpcReturnCallOnce("127.0.0.1", 9800, "1", "substractMethod", params, substractCallback, 3000);
+	std::cout << result->response->getResult().asString() << std::endl;
 }
 
-/// hello world notify test case
+/// hello world notify test case once
 
 void ClientStubhelloNotifyTest() {
 	Nano::Rpc::RpcClientStub::Ptr rpcClientStub = std::make_shared<Nano::Rpc::RpcClientStub>();
 	std::unordered_map<std::string, Json::Value> params = {
 	  {"notify", "World"}
 	};
-	rpcClientStub->rpcNotifyCall("127.0.0.1", 9800, "helloworldMethod", params);
-	system("pause");
+	auto result = Nano::Rpc::RpcClientStub::rpcNotifyCallOnce("127.0.0.1", 9800, "helloworldMethod", params);
+	std::cout << "notify success :" << result << std::endl;
 }
-
 
 void helloNotifyService(Json::Value& request)
 {
