@@ -7,9 +7,9 @@
 #include "session.h"
 #include "packet.h"
 
-#include "BaseServer.h"
-#include "RpcService.h"
-#include "RpcProcedure.h"
+#include "baseserver.h"
+#include "rpcservice.h"
+#include "rpcprocedure.h"
 
 #include "stealThreadPool.h"
 #include "functionWrapper.h"
@@ -22,22 +22,16 @@ namespace Nano {
 		class RpcServer : public Communication::BaseServer, public Communication::IDataReadyEventHandler,
 			public std::enable_shared_from_this<RpcServer>
 		{
+			friend class RpcServerFactory;
 		public:
 			typedef std::shared_ptr<RpcServer> Ptr;
-		public:
+		protected:
 			RpcServer(short port);
-			virtual ~RpcServer();
-
-			static RpcServer::Ptr Create(short port) {
-				return std::make_shared<RpcServer>(port);
-			}
-
 			void Init();
-
+		public:	
+			virtual ~RpcServer();
 			void addProcedureReturn(std::string methodName, RpcService::ProcedureReturnUniqPtr p);
-
 			void addProcedureNotify(std::string methodName, RpcService::ProcedureNotifyUniqPtr p);
-
 		private:
 			void onDataReady(std::shared_ptr<Communication::Session> sender, std::shared_ptr<Communication::RecvPacket> packet) override;
 			void handleProcedureReturn(std::shared_ptr<Communication::Session> sender, JrpcProto::JsonRpcRequest::Ptr request);
@@ -45,6 +39,16 @@ namespace Nano {
 			void handleJsonRpcErrorException(std::shared_ptr<Communication::Session> sender, JrpcProto::JsonRpcError::Ptr error);
 		private:
 			RpcService::Ptr m_rpcService;
+		};
+
+		class RpcServerFactory
+		{
+		public:
+			static RpcServer::Ptr create(short port) {
+				auto ptr = std::shared_ptr<RpcServer>(new RpcServer(port));
+				ptr->Init();
+				return ptr;
+			}
 		};
 	}
 }

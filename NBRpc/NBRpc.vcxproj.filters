@@ -103,7 +103,13 @@
       <Filter>源文件\rpc</Filter>
     </ClCompile>
     <ClCompile Include="rpcclient.cpp">
-      <Filter>源文件</Filter>
+      <Filter>源文件\rpc</Filter>
+    </ClCompile>
+    <ClCompile Include="rpcserverstub.cpp">
+      <Filter>源文件\rpc</Filter>
+    </ClCompile>
+    <ClCompile Include="rpcclientstub.cpp">
+      <Filter>源文件\rpc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -183,6 +189,15 @@
       <Filter>头文件\rpc</Filter>
     </ClInclude>
     <ClInclude Include="rpcclient.h">
+      <Filter>头文件\rpc</Filter>
+    </ClInclude>
+    <ClInclude Include="rpcserverstub.h">
+      <Filter>头文件\rpc</Filter>
+    </ClInclude>
+    <ClInclude Include="rpcclientstub.h">
+      <Filter>头文件\rpc</Filter>
+    </ClInclude>
+    <ClInclude Include="test.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

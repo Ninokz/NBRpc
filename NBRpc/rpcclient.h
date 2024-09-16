@@ -11,26 +11,28 @@
 #include "session.h"
 #include "packet.h"
 
-#include "BaseClient.h"
-#include "RpcService.h"
-#include "RpcProcedure.h"
+#include "rpcservice.h"
+#include "rpcprocedure.h"
+#include "baseclient.h"
 
 #include "stealThreadPool.h"
 #include "functionWrapper.h"
 
 #include "jrpcproto.h"
 #include "rpcexception.h"
+#include "nocopyable.h"
 
 
 namespace Nano {
 	namespace Rpc {
-		class RpcCallRecord
+		class CallRecord : public Noncopyable
 		{
 		public:
-			typedef std::shared_ptr<RpcCallRecord> Ptr;
-			RpcCallRecord() = delete;
-			RpcCallRecord(JrpcProto::JsonRpcRequest::Ptr request) : request(request), response(nullptr), timestamp(std::time(nullptr)) {}
-			~RpcCallRecord() = default;
+			typedef std::shared_ptr<CallRecord> Ptr;
+		public:
+			CallRecord() = delete;
+			CallRecord(JrpcProto::JsonRpcRequest::Ptr request) : request(request), response(nullptr), timestamp(std::time(nullptr)) {}
+			~CallRecord() = default;
 		public:
 			time_t timestamp;
 			JrpcProto::JsonRpcRequest::Ptr request;
@@ -40,21 +42,32 @@ namespace Nano {
 		class RpcClient : public Communication::BaseClient, public Communication::IDataReadyEventHandler,
 			public std::enable_shared_from_this<RpcClient>
 		{
-		public:
-			
+			friend class RpcClientFactory;
+		public:	
 			typedef std::shared_ptr<RpcClient> Ptr;
-			typedef std::unordered_map<std::string, std::pair<RpcCallRecord::Ptr, ProcedureDoneCallback>> RpcCallRecordMap;
-		public:
+			typedef std::unordered_map<std::string, std::pair<CallRecord::Ptr, ProcedureDoneCallback>> CallRecordMap;
+		protected:
 			RpcClient();
-			virtual ~RpcClient();
 			void Init();
+		public:
+			virtual ~RpcClient();
 			bool callReturnProcedure(JrpcProto::JsonRpcRequest::Ptr request, const ProcedureDoneCallback callback);
 			bool callNotifyProcedure(JrpcProto::JsonRpcRequest::Ptr request);
-			RpcCallRecord::Ptr getReturnCallRecord(const std::string& id);
+			CallRecord::Ptr getReturnCallRecord(const std::string& id);
 		private:
 			void onDataReady(std::shared_ptr<Communication::Session> sender, std::shared_ptr<Communication::RecvPacket> packet) override;
 		private:
-			RpcCallRecordMap m_callRecords;
+			CallRecordMap m_callRecords;
+		};
+
+		class RpcClientFactory
+		{
+		public:
+			static RpcClient::Ptr create() {
+				auto ptr = std::shared_ptr<RpcClient>(new RpcClient());
+				ptr->Init();
+				return ptr;
+			}
 		};
 	}
 }

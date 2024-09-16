@@ -21,7 +21,7 @@ namespace Nano {
 			if (m_callRecords.find(request->getId()) != m_callRecords.end())
 				return false;
 			// 1. record
-			RpcCallRecord::Ptr reRecord = std::make_shared<RpcCallRecord>(request);
+			CallRecord::Ptr reRecord = std::make_shared<CallRecord>(request);
 			m_callRecords.emplace(request->getId(), std::make_pair(reRecord, callback));
 			// 2. call
 			std::string jsonStyleStr = request->toJsonStr();
@@ -58,7 +58,7 @@ namespace Nano {
 			}
 		}
 
-		RpcCallRecord::Ptr RpcClient::getReturnCallRecord(const std::string& id)
+		CallRecord::Ptr RpcClient::getReturnCallRecord(const std::string& id)
 		{
 			auto it = m_callRecords.find(id);
 			if (it != m_callRecords.end())
