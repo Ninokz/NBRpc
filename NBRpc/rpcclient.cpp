@@ -70,7 +70,7 @@ namespace Nano {
 		{
 			std::string responseJsonStr = Nano::Communication::decode(packet->m_data, packet->m_size);
 			bool generateResult = false;
-			Nano::JrpcProto::JsonRpcResponse::Ptr response = Nano::JrpcProto::JsonRpcResponseFactory::createFromJsonStr(responseJsonStr, &generateResult);
+			Nano::JrpcProto::JsonRpcResponse::Ptr response = Nano::JrpcProto::JsonRpcResponseFactory::createResponseFromJsonStr(responseJsonStr, &generateResult);
 			if (generateResult)
 			{
 				auto it = m_callRecords.find(response->getId());

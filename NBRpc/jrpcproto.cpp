@@ -2,8 +2,12 @@
 
 namespace Nano {
 	namespace JrpcProto {
-		JsonRpcRequest::JsonRpcRequest(const Json::Value& rpcRequest) : m_rpcRequest(rpcRequest)
+		JsonRpcRequest::JsonRpcRequest(const Json::Value rpcRequest)
 		{
+			if(JsonRpcRequestFactory::fieldsExist(rpcRequest))
+				m_rpcRequest = rpcRequest;
+			else
+				m_rpcRequest = Json::Value();
 		}
 
 		JsonRpcRequest::JsonRpcRequest(std::string jsonrpcVersion, std::string methodName, Json::Value parameters, std::string requestId)
@@ -179,8 +183,12 @@ namespace Nano {
 			m_rpcResponse["id"] = "";
 		}
 
-		JsonRpcResponse::JsonRpcResponse(const Json::Value& rpcResponse) :m_rpcResponse(rpcResponse)
+		JsonRpcResponse::JsonRpcResponse(const Json::Value rpcResponse)
 		{
+			if (JsonRpcResponseFactory::fieldsExist(rpcResponse))
+				m_rpcResponse = rpcResponse;
+			else
+				m_rpcResponse = Json::Value();
 		}
 
 		Json::Value JsonRpcResponse::toJson() const
@@ -248,43 +256,25 @@ namespace Nano {
 
 		JsonRpcRequest::Ptr JsonRpcRequestFactory::createFromJsonStr(const std::string& jsonStr, bool* flag)
 		{
-			try {
-				Json::CharReaderBuilder readerBuilder;
-				Json::Value root;
-				std::string errs;
+			Json::CharReaderBuilder readerBuilder;
+			Json::Value root;
+			std::string errs;
 
-				std::istringstream iss(jsonStr);
-				if (!Json::parseFromStream(readerBuilder, iss, &root, &errs)) {
+			std::istringstream iss(jsonStr);
+			if (!Json::parseFromStream(readerBuilder, iss, &root, &errs)) {
+				*flag = false;
+				return nullptr;
+			}
+			else
+			{
+				if (!JsonRpcRequestFactory::fieldsExist(root))
+				{
 					*flag = false;
 					return nullptr;
 				}
-				else
-				{
-					if (!JsonRpcRequestFactory::fieldsExist(root))
-					{
-						*flag = false;
-						return nullptr;
-					}
-					*flag = true;
-					return std::make_shared<JsonRpcRequest>(root);
-				}
+				*flag = true;
+				return std::make_shared<JsonRpcRequest>(root);
 			}
-			catch (const std::exception&)
-			{
-				*flag = false;
-				return nullptr;
-			}
-		}
-
-		JsonRpcRequest::Ptr JsonRpcRequestFactory::createFromJson(const Json::Value& json, bool* flag)
-		{
-			if (!JsonRpcRequestFactory::fieldsExist(json))
-			{
-				*flag = false;
-				return nullptr;
-			}
-			*flag = true;
-			return std::make_shared<JsonRpcRequest>(json);
 		}
 
 		inline bool JsonRpcRequestFactory::fieldsExist(const Json::Value& rpcRequestJson)
@@ -305,7 +295,7 @@ namespace Nano {
 			return true;
 		}
 
-		JsonRpcResponse::Ptr JsonRpcResponseFactory::createFromJsonStr(const std::string& jsonStr, bool* flag)
+		JsonRpcResponse::Ptr JsonRpcResponseFactory::createResponseFromJsonStr(const std::string& jsonStr, bool* flag)
 		{
 			Json::CharReaderBuilder readerBuilder;
 			Json::Value root;
@@ -327,9 +317,9 @@ namespace Nano {
 			}
 		}
 
-		JsonRpcResponse::Ptr JsonRpcResponseFactory::createResult(const Json::Value& request, const Json::Value result, bool* flag)
+		JsonRpcResponse::Ptr JsonRpcResponseFactory::createResponseFromRequest(const Json::Value& request, const Json::Value result, bool* flag)
 		{
-			if (!JsonRpcResponseFactory::fieldsExist(request))
+			if (!JsonRpcRequestFactory::fieldsExist(request))
 			{
 				*flag = false;
 				return nullptr;
@@ -341,20 +331,9 @@ namespace Nano {
 			}
 		}
 
-		JsonRpcResponse::Ptr JsonRpcResponseFactory::createErrorResponse(const std::string version, const JsonRpcError& error)
+		JsonRpcResponse::Ptr JsonRpcResponseFactory::createErrorResponse(const std::string& version, const JsonRpcError& error)
 		{
 			return std::make_shared<JsonRpcResponse>(version, error);
-		}
-
-		JsonRpcResponse::Ptr JsonRpcResponseFactory::createFromJson(const Json::Value& json, bool* flag)
-		{
-			if (!JsonRpcResponseFactory::fieldsExist(json))
-			{
-				*flag = false;
-				return nullptr;
-			}
-			*flag = true;
-			return std::make_shared<JsonRpcResponse>(json);
 		}
 
 		inline bool JsonRpcResponseFactory::fieldsExist(const Json::Value& rpcresponseJson)

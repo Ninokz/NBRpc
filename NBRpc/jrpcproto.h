@@ -22,7 +22,7 @@ namespace Nano {
 		private:
 			JsonRpcRequest() = delete;
 		public:
-			JsonRpcRequest(const Json::Value& rpcRequest);
+			JsonRpcRequest(const Json::Value rpcRequest);
 
 			JsonRpcRequest(std::string jsonrpcVersion, std::string methodName, Json::Value parametersNameWithValue, std::string requestId);
 
@@ -61,8 +61,6 @@ namespace Nano {
 
 			static JsonRpcRequest::Ptr createFromJsonStr(const std::string& jsonStr, bool* flag);
 
-			static JsonRpcRequest::Ptr createFromJson(const Json::Value& json, bool* flag);
-
 			template <typename... Args>
 			static JsonRpcRequest::Ptr createReturnCallRequest(const std::string& version, const std::string& method, const std::string id, const Args&... args) {
 				Json::Value params(Json::objectValue);
@@ -78,8 +76,9 @@ namespace Nano {
 				JsonRpcRequest::Ptr request = std::make_shared<JsonRpcRequest>(version, method, params, "");
 				return request;
 			}
-		private:
+
 			static inline bool fieldsExist(const Json::Value& rpcRequestJson);
+		private:		
 			static void addParams(Json::Value& params) {}
 			template <typename Key, typename Value, typename... Args>
 			static void addParams(Json::Value& params, const Key& key, const Value& value, const Args&... args) {
@@ -130,7 +129,7 @@ namespace Nano {
 		public:
 			JsonRpcResponse(std::string jsonrpcVersion, std::string requestId, const Json::Value result);
 			JsonRpcResponse(std::string jsonrpcVersion, const JsonRpcError& error);
-			JsonRpcResponse(const Json::Value& rpcResponse);
+			JsonRpcResponse(const Json::Value rpcResponse);
 
 			Json::Value toJson() const;
 
@@ -150,11 +149,10 @@ namespace Nano {
 		class JsonRpcResponseFactory
 		{
 		public:
-			static JsonRpcResponse::Ptr createFromJsonStr(const std::string& jsonStr, bool* flag);
-			static JsonRpcResponse::Ptr createResult(const Json::Value& request, const Json::Value result, bool* flag);
-			static JsonRpcResponse::Ptr createErrorResponse(const std::string version, const JsonRpcError& error);
-			static JsonRpcResponse::Ptr createFromJson(const Json::Value& json, bool* flag);
-		private:
+			static JsonRpcResponse::Ptr createResponseFromJsonStr(const std::string& jsonStr, bool* flag);
+			static JsonRpcResponse::Ptr createErrorResponse(const std::string& version, const JsonRpcError& error);
+			static JsonRpcResponse::Ptr createResponseFromRequest(const Json::Value& request, const Json::Value result, bool* flag);
+
 			static inline bool fieldsExist(const Json::Value& rpcresponseJson);
 		};
 	}

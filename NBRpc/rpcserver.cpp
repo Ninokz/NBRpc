@@ -4,6 +4,7 @@ namespace Nano {
 	namespace Rpc {
 		RpcServer::RpcServer(short port) : Communication::BaseServer(port), m_rpcService(std::make_unique<RpcService>())
 		{
+
 		}
 
 		RpcServer::~RpcServer()
@@ -30,7 +31,7 @@ namespace Nano {
 			try {
 				std::string requestJsonStr = Nano::Communication::decode(packet->m_data, packet->m_size);
 				bool generateResult = false;
-				JrpcProto::JsonRpcRequest::Ptr request = JrpcProto::JsonRpcRequestFactory::createFromJson(requestJsonStr, &generateResult);
+				JrpcProto::JsonRpcRequest::Ptr request = JrpcProto::JsonRpcRequestFactory::createFromJsonStr(requestJsonStr, &generateResult);
 				if (!generateResult) {
 					throw RpcException(JrpcProto::JsonRpcError::toInt(JrpcProto::JsonRpcError::JsonRpcErrorCode::ParseError),
 						JrpcProto::JsonRpcError::getErrorMessage(JrpcProto::JsonRpcError::JsonRpcErrorCode::ParseError));
@@ -58,27 +59,18 @@ namespace Nano {
 				this->m_rpcService->callProcedureReturn(method, reqJson,
 					[this, sender](Json::Value response) {
 						try {
-							bool flag = false;
-							JrpcProto::JsonRpcResponse::Ptr jrp = JrpcProto::JsonRpcResponseFactory::createFromJson(response, &flag);
-							if (flag) {
-								std::string responseStr = jrp->toJsonStr();
-								char* buffer = nullptr;
-								int len = 0;
-								if (Nano::Communication::encode(responseStr, &buffer, &len))
-								{
-									sender->send(buffer, len);
-									delete[] buffer;
-									buffer = nullptr;
-								}
-								else
-									throw RpcException(JrpcProto::JsonRpcError::toInt(JrpcProto::JsonRpcError::JsonRpcErrorCode::ParseError),
-										JrpcProto::JsonRpcError::getErrorMessage(JrpcProto::JsonRpcError::JsonRpcErrorCode::ParseError));
+							std::string responseStr = response.toStyledString();
+							char* buffer = nullptr;
+							int len = 0;
+							if (Nano::Communication::encode(responseStr, &buffer, &len))
+							{
+								sender->send(buffer, len);
+								delete[] buffer;
+								buffer = nullptr;
 							}
 							else
-							{
 								throw RpcException(JrpcProto::JsonRpcError::toInt(JrpcProto::JsonRpcError::JsonRpcErrorCode::ParseError),
 									JrpcProto::JsonRpcError::getErrorMessage(JrpcProto::JsonRpcError::JsonRpcErrorCode::ParseError));
-							}
 						}
 						catch (RpcException& e) {
 							auto errorResponse = JrpcProto::JsonRpcErrorFactory::createFromInt(e.err());
