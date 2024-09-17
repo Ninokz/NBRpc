@@ -2,6 +2,6 @@
 
 int main()
 {
-	ClientStubSubstractTest();
+	RpcServerStubSubstractTest();
 	return 0;
 }

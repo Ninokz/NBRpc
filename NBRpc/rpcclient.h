@@ -56,6 +56,7 @@ namespace Nano {
 			virtual ~RpcClient();
 			bool callReturnProcedure(JrpcProto::JsonRpcRequest::Ptr request, const ProcedureDoneCallback callback);
 			bool callNotifyProcedure(JrpcProto::JsonRpcRequest::Ptr request);
+
 			CallRecord::Ptr getReturnCallRecord(const std::string& id);
 			void clearCallRecords();
 			void removeCallRecord(const std::string& id);

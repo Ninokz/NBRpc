@@ -34,7 +34,7 @@ void ClientStubHelloWorldTest() {
 	std::unordered_map<std::string, Json::Value> params = {
 	  {"name", "World"}
 	};
-	auto result = Nano::Rpc::RpcClientStub::rpcReturnCallOnce("127.0.0.1", 9800, "1", "helloworldMethod", params, helloworldCallback, 3000);
+	auto result = Nano::Rpc::RpcClientOnceStub::rpcReturnCallOnce("127.0.0.1", 9800, "1", "helloworldMethod", params, helloworldCallback, 3000);
 	std::cout << result->response->getResult().asString() << std::endl;
 }
 
@@ -83,7 +83,7 @@ void ClientStubhelloNotifyTest() {
 	std::unordered_map<std::string, Json::Value> params = {
 	  {"notify", "World"}
 	};
-	auto result = Nano::Rpc::RpcClientStub::rpcNotifyCallOnce("127.0.0.1", 9800, "helloworldMethod", params);
+	auto result = Nano::Rpc::RpcClientOnceStub::rpcNotifyCallOnce("127.0.0.1", 9800, "helloworldMethod", params);
 	std::cout << "notify success :" << result << std::endl;
 }
 
