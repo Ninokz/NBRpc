@@ -27,7 +27,7 @@ void RpcServerStubHelloWorldTest() {
 }
 
 void helloworldCallback(Json::Value response) {
-	
+	std::cout << response.toStyledString() << std::endl;
 };
 
 void ClientStubHelloWorldTest() {
@@ -64,7 +64,7 @@ void RpcServerStubSubstractTest() {
 }
 
 void substractCallback(Json::Value response) {
-	
+	std::cout << response.toStyledString() << std::endl;
 };
 
 void ClientStubSubstractTest() {
