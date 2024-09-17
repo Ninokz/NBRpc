@@ -53,12 +53,12 @@ namespace Nano {
 				}
 				else
 				{
-					return nullptr;
+					return std::make_shared<CallRecord>();
 				}
 			}
 			else
 			{
-				return nullptr;
+				return std::make_shared<CallRecord>();
 			}
 		}
 
@@ -80,7 +80,7 @@ namespace Nano {
 					}
 					else
 					{
-						promise->set_value(nullptr);
+						promise->set_value(std::make_shared<CallRecord>());
 					}
 				});
 				return future;
@@ -88,7 +88,7 @@ namespace Nano {
 			else
 			{
 				// Set an empty result in the promise in case of connection failure
-				promise->set_value(nullptr);
+				promise->set_value(std::make_shared<CallRecord>());
 				return future;
 			}
 		}
@@ -146,12 +146,12 @@ namespace Nano {
 				}
 				else
 				{
-					return nullptr;
+					return std::make_shared<CallRecord>();
 				}
 			}
 			else
 			{
-				return nullptr;
+				return std::make_shared<CallRecord>();
 			}
 		}
 
@@ -180,7 +180,7 @@ namespace Nano {
 					else
 					{
 						// Set an empty result in the promise in case of connection failure
-						promise->set_value(nullptr);
+						promise->set_value(std::make_shared<CallRecord>());
 					}
 				});
 
@@ -189,7 +189,7 @@ namespace Nano {
 			else
 			{
 				// Set an empty result in the promise in case of connection failure
-				promise->set_value(nullptr);
+				promise->set_value(std::make_shared<CallRecord>());
 				return future;
 			}
 		}
