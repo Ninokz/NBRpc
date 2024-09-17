@@ -9,9 +9,9 @@
 
 void helloworldReturnService(Json::Value& request, const Nano::Rpc::ProcedureDoneCallback& done) {
 	Json::Value result = "Hello, " + request["params"]["name"].asString() + "!";
+	
 	bool flag = false;
 	Nano::JrpcProto::JsonRpcResponse::Ptr response = Nano::JrpcProto::JsonRpcResponseFactory::createResponseFromRequest(request, result, &flag);
-
 	done(response->toJson());
 }
 
@@ -72,7 +72,7 @@ void ClientStubSubstractTest() {
 	  {"subtrahend", 23},
 	  {"minuend", 42}
 	};
-	auto result = Nano::Rpc::RpcClientStub::rpcReturnCallOnce("127.0.0.1", 9800, "1", "substractMethod", params, substractCallback, 3000);
+	auto result = Nano::Rpc::RpcClientOnceStub::rpcReturnCallOnce("127.0.0.1", 9800, "1", "substractMethod", params, substractCallback, 3000);
 	std::cout << result->response->getResult().asString() << std::endl;
 }
 
