@@ -46,9 +46,15 @@ namespace Nano {
 			if (m_connected)
 			{
 				Nano::JrpcProto::JsonRpcRequest::Ptr request = JrpcProto::JsonRpcRequestFactory::createReturnCallRequest("2.0", methodName, id, params);
-				this->m_rpcClient->callReturnProcedure(request, callback);
-				std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds_timeout));
-				return this->m_rpcClient->getReturnCallRecord(id);
+				if (this->m_rpcClient->callReturnProcedure(request, callback))
+				{
+					std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds_timeout));
+					return this->m_rpcClient->getReturnCallRecord(id);
+				}
+				else
+				{
+					return nullptr;
+				}
 			}
 			else
 			{
@@ -67,10 +73,16 @@ namespace Nano {
 			{
 				// Submit the async task to the thread pool
 				Nano::Concurrency::SimpleThreadPool::GetInstance()->submit([this, request, callback, milliseconds_timeout, id, promise]() {
-					this->m_rpcClient->callReturnProcedure(request, callback);
-					std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds_timeout));
-					promise->set_value(this->m_rpcClient->getReturnCallRecord(id));
-					});
+					if (this->m_rpcClient->callReturnProcedure(request, callback))
+					{
+						std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds_timeout));
+						promise->set_value(this->m_rpcClient->getReturnCallRecord(id));
+					}
+					else
+					{
+						promise->set_value(nullptr);
+					}
+				});
 				return future;
 			}
 			else
@@ -86,8 +98,7 @@ namespace Nano {
 			if (m_connected)
 			{
 				Nano::JrpcProto::JsonRpcRequest::Ptr request = JrpcProto::JsonRpcRequestFactory::createNotifyCallRequest("2.0", methodName, params);
-				this->m_rpcClient->callNotifyProcedure(request);
-				return true;
+				return this->m_rpcClient->callNotifyProcedure(request);
 			}
 			else
 			{
@@ -106,9 +117,8 @@ namespace Nano {
 			{
 				// Submit the async task to the thread pool
 				Nano::Concurrency::SimpleThreadPool::GetInstance()->submit([this, request, promise]() {
-					this->m_rpcClient->callNotifyProcedure(request);
-					promise->set_value(true);
-					});
+					promise->set_value(this->m_rpcClient->callNotifyProcedure(request));
+				});
 				return future;
 			}
 			else
@@ -133,10 +143,16 @@ namespace Nano {
 			auto tmp_rpcClient = Rpc::RpcClientFactory::create();
 			if (tmp_rpcClient->connect(ip, port))
 			{
-				tmp_rpcClient->callReturnProcedure(request, callback);
-				std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds_timeout));
-				tmp_rpcClient->disconnect();
-				return tmp_rpcClient->getReturnCallRecord(id);
+				if (tmp_rpcClient->callReturnProcedure(request, callback))
+				{
+					std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds_timeout));
+					tmp_rpcClient->disconnect();
+					return tmp_rpcClient->getReturnCallRecord(id);
+				}
+				else
+				{
+					return nullptr;
+				}
 			}
 			else
 			{
@@ -159,13 +175,19 @@ namespace Nano {
 			{
 				// Submit the async task to the thread pool
 				Nano::Concurrency::SimpleThreadPool::GetInstance()->submit([tmp_rpcClient, request, callback, milliseconds_timeout, id, promise]() {
-					tmp_rpcClient->callReturnProcedure(request, callback);
-					std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds_timeout));
-					tmp_rpcClient->disconnect();
-
-					// Set the result in the promise
-					promise->set_value(tmp_rpcClient->getReturnCallRecord(id));
-					});
+					if (tmp_rpcClient->callReturnProcedure(request, callback))
+					{
+						std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds_timeout));
+						tmp_rpcClient->disconnect();
+						// Set the result in the promise
+						promise->set_value(tmp_rpcClient->getReturnCallRecord(id));
+					}
+					else
+					{
+						// Set an empty result in the promise in case of connection failure
+						promise->set_value(nullptr);
+					}
+				});
 
 				return future;
 			}
@@ -184,9 +206,9 @@ namespace Nano {
 			auto tmp_rpcClient = Rpc::RpcClientFactory::create();
 			if (tmp_rpcClient->connect(ip, port))
 			{
-				tmp_rpcClient->callNotifyProcedure(request);
+				bool res = tmp_rpcClient->callNotifyProcedure(request);
 				tmp_rpcClient->disconnect();
-				return true;
+				return res;
 			}
 			else
 			{
@@ -207,10 +229,10 @@ namespace Nano {
 			{
 				// Submit the async task to the thread pool
 				Nano::Concurrency::SimpleThreadPool::GetInstance()->submit([tmp_rpcClient, request, promise]() {
-					tmp_rpcClient->callNotifyProcedure(request);
+					bool res = tmp_rpcClient->callNotifyProcedure(request);
 					tmp_rpcClient->disconnect();
-					promise->set_value(true);
-					});
+					promise->set_value(res);
+				});
 				return future;
 			}
 			else
