@@ -49,17 +49,15 @@ namespace Nano {
 				if (this->m_rpcClient->callReturnProcedure(request, callback))
 				{
 					std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds_timeout));
-					return this->m_rpcClient->getReturnCallRecord(id);
-				}
-				else
-				{
-					return std::make_shared<CallRecord>();
+					auto record =  this->m_rpcClient->getReturnCallRecord(id);
+					if (!record->isError() && record->isDone())
+					{
+						this->m_rpcClient->removeCallRecord(id);
+					}
+					return record;
 				}
 			}
-			else
-			{
-				return std::make_shared<CallRecord>();
-			}
+			return std::make_shared<CallRecord>();
 		}
 
 		std::future<CallRecord::Ptr> RpcClientStub::asyncRpcReturnCall(std::string id, std::string methodName, std::unordered_map<std::string, Json::Value> params, const ProcedureDoneCallback callback, int milliseconds_timeout)
@@ -76,7 +74,12 @@ namespace Nano {
 					if (this->m_rpcClient->callReturnProcedure(request, callback))
 					{
 						std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds_timeout));
-						promise->set_value(this->m_rpcClient->getReturnCallRecord(id));
+						auto record = this->m_rpcClient->getReturnCallRecord(id);
+						if (!record->isError() && record->isDone())
+						{
+							this->m_rpcClient->removeCallRecord(id);
+						}
+						promise->set_value(record);
 					}
 					else
 					{
@@ -87,7 +90,6 @@ namespace Nano {
 			}
 			else
 			{
-				// Set an empty result in the promise in case of connection failure
 				promise->set_value(std::make_shared<CallRecord>());
 				return future;
 			}
@@ -144,15 +146,8 @@ namespace Nano {
 					tmp_rpcClient->disconnect();
 					return tmp_rpcClient->getReturnCallRecord(id);
 				}
-				else
-				{
-					return std::make_shared<CallRecord>();
-				}
 			}
-			else
-			{
-				return std::make_shared<CallRecord>();
-			}
+			return std::make_shared<CallRecord>();
 		}
 
 		std::future<CallRecord::Ptr> RpcClientOnceStub::asyncRpcReturnCallOnce(std::string ip, short port, std::string id, std::string methodName,
