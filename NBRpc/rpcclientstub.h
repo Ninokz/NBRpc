@@ -16,6 +16,7 @@ namespace Nano {
 		{
 		public:
 			typedef std::shared_ptr<RpcClientStub> Ptr;
+		public:
 			RpcClientStub();
 			virtual ~RpcClientStub();
 
