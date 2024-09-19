@@ -2,16 +2,6 @@
 
 namespace Nano {
 	namespace Log {
-		inline uint64_t getThreadId()
-		{
-			return std::hash<std::thread::id>{}(std::this_thread::get_id());
-		}
-
-		inline uint64_t getElapsedMS()
-		{
-			return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count() - g_start_time;
-		}
-
 #pragma region LogLevel
 		const char* LogLevel::ToString(LogLevel::Level level)
 		{
