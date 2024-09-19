@@ -2,6 +2,6 @@
 
 int main()
 {
-	RpcServerStubSubstractTest();
+	highConcurrencyClientStubHelloWorldTest();
 	return 0;
 }

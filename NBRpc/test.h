@@ -15,6 +15,7 @@ void helloworldReturnService(Json::Value& request, const Nano::Rpc::ProcedureDon
 	done(response->toJson());
 }
 
+
 void RpcServerStubHelloWorldTest() {
 	Nano::Rpc::RpcServerStub::Ptr rpcServerStub = std::make_shared<Nano::Rpc::RpcServerStub>(9800);
 	std::unordered_map<std::string, Json::ValueType> paramsNameTypesMap = {
@@ -36,6 +37,21 @@ void ClientStubHelloWorldTest() {
 	};
 	auto result = Nano::Rpc::RpcClientOnceStub::rpcReturnCallOnce("127.0.0.1", 9800, "1", "helloworldMethod", params, helloworldCallback, 3000);
 	std::cout << result->response->getResult().asString() << std::endl;
+}
+
+void highConcurrencyClientStubHelloWorldTest() {
+	std::unordered_map<std::string, Json::Value> params = {
+	  {"name", "World"}
+	};
+	auto client = std::make_shared<Nano::Rpc::RpcClientStub>();
+	client->connect("127.0.0.1", 9800);
+	for (int i = 0; i < 100; i++) {
+		std::string id = std::to_string(i);
+		auto result = client->asyncRpcReturnCall_(id, "helloworldMethod", params, helloworldCallback, 1000);
+	}
+	auto end = std::chrono::high_resolution_clock::now();
+	system("pause");
+	client->disconnect();
 }
 
 //// Substract Test Case once

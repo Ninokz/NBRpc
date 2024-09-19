@@ -6,6 +6,7 @@
 #include "packet.h"
 #include "session.h"
 
+
 namespace Nano {
 	namespace Communication {
 		class ICloseEventHandler {
