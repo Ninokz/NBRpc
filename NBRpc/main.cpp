@@ -3,6 +3,6 @@
 int main()
 {
 	InitLogger();
-	highConcurrencyClientStubHelloWorldTest();
+	RpcServerStubHelloWorldTest();
 	return 0;
 }

@@ -5,7 +5,9 @@ namespace Nano {
 		StealThreadPool::StealThreadPool(int maxFailCount, int maxBackOffTime, unsigned int poolSize) :
 			m_done(false), m_joiner(m_threads), m_atm_index(0),
 			m_maxFailCount(maxFailCount),
-			m_maxBackOffTimeMilliSeconds(maxBackOffTime)
+			m_maxBackOffTimeMilliSeconds(maxBackOffTime),
+			m_fail_count(poolSize, 0),
+			m_backoff_time_ms(poolSize, 1)
 		{
 			try
 			{
@@ -28,39 +30,70 @@ namespace Nano {
 
 		void StealThreadPool::worker_thread(int index)
 		{
-			int fail_count = 0;
-			int backoff_time_ms = 1;
+			m_fail_count[index] = 0;
+			m_backoff_time_ms[index] = 1;
 			while (!m_done)
 			{
 				FunctionWrapper wrapper;
 				if (m_thread_work_ques[index].try_pop(wrapper) || try_steal_from_others(index, wrapper)) {
 					// 成功获取任务后，重置退避时间, 重置失败次数
-					fail_count = 0;
-					backoff_time_ms = 1;
+					m_fail_count[index] = 0;
+					m_backoff_time_ms[index] = 1;
 					wrapper();
 				}
 				else {
-					
-					// 未获取到任务，失败次数加1
-					++fail_count;
-					if (fail_count > m_maxFailCount) {
+					// 增加失败次数
+					++m_fail_count[index];
 
+					// 每隔一定失败次数再打印日志
+					if (m_fail_count[index] % 10 == 0) {
+						ASYNC_LOG_DEBUG(ASYNC_LOG_NAME("STD_LOGGER"), "StealThreadPool")
+							<< "worker_thread " << index << " 未获取到任务，失败次数: " << m_fail_count[index] << std::endl;
+					}
+
+					if (m_fail_count[index] > m_maxFailCount) {
+						// 随机指数退避时间，避免所有线程同时休眠相同时间
+						m_backoff_time_ms[index] = std::min(m_backoff_time_ms[index] * (1 + rand() % 2), m_maxBackOffTimeMilliSeconds);
 						// 休眠一段时间
-						std::this_thread::sleep_for(std::chrono::milliseconds(backoff_time_ms));
-						// 退避时间翻倍, 指数退避策略，最多到 m_maxBackOffTimeMilliSeconds 上限
-						backoff_time_ms = std::min(backoff_time_ms * 2, m_maxBackOffTimeMilliSeconds);
-						// fail_count = 0;	// 重置失败次数
-						// 不重置 fail_count，这样可以持续增大 backoff_time_ms，直到达到上限
-						// 依靠上限来控制线程的休眠时间，在线程工作过后，失败次数会被重置
-						
+						std::this_thread::sleep_for(std::chrono::milliseconds(m_backoff_time_ms[index]));
 					}
 					else {
-
+						ASYNC_LOG_DEBUG(ASYNC_LOG_NAME("STD_LOGGER"), "StealThreadPool")
+							<< "worker_thread " << index << " 未获取到任务，线程让出CPU: " << m_fail_count[index] << std::endl;
 						// 未获取到任务，线程让出CPU
 						std::this_thread::yield();
 					}
 				}
 			}
+
+			//m_fail_count[index] = 0;
+			//m_backoff_time_ms[index] = 1;
+
+			//while (!m_done)
+			//{
+			//	FunctionWrapper wrapper;
+
+			//	{
+			//		std::unique_lock<std::mutex> lock(m_queue_mutex);
+			//		// 如果任务队列为空，则等待任务到来
+			//		m_condition.wait(lock, [this, index, &wrapper]() {
+			//			return m_done || !m_thread_work_ques[index].empty() || try_steal_from_others(index, wrapper);
+			//		});
+			//		// 如果线程池已终止，退出
+			//		if (m_done) return;
+			//		// 从队列中获取任务
+			//		if (!m_thread_work_ques[index].try_pop(wrapper) && !try_steal_from_others(index, wrapper)) {
+			//			ASYNC_LOG_DEBUG(ASYNC_LOG_NAME("STD_LOGGER"), "StealThreadPool") << "worker_thread " << index << std::endl;
+			//			continue; // 如果没成功获取任务，继续等待
+			//		}
+			//	}
+
+			//	// 执行任务
+			//	ASYNC_LOG_DEBUG(ASYNC_LOG_NAME("STD_LOGGER"), "StealThreadPool") << "worker_thread " << index<< "获取到任务" << std::endl;
+			//	m_fail_count[index] = 0;
+			//	m_backoff_time_ms[index] = 1;
+			//	wrapper();
+			//}
 
 			//while (!m_done)
 			//{
