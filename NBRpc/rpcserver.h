@@ -13,6 +13,7 @@
 
 #include "stealThreadPool.h"
 #include "functionWrapper.h"
+#include "parrallenThreadPool.h"
 
 #include "jrpcproto.h"
 #include "rpcexception.h"

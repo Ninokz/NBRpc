@@ -53,8 +53,8 @@ namespace Nano {
 
 		void RpcServer::handleProcedureReturn(std::shared_ptr<Communication::Session> sender, JrpcProto::JsonRpcRequest::Ptr request)
 		{
-			Nano::Concurrency::StealThreadPool::GetInstance()->submit([this, sender, request]() {
-				std::string method = request->getMethod();
+			std::string method = request->getMethod();
+			Nano::Concurrency::StealThreadPool::GetInstance()->submit([this, method, sender, request]() {
 				Json::Value reqJson = request->toJson();
 				this->m_rpcService->callProcedureReturn(method, reqJson,
 					[this, sender](Json::Value response) {

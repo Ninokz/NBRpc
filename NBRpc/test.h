@@ -1,9 +1,23 @@
 #pragma once
+#include "log.h"
 #include "rpcclientstub.h"
 #include "rpcserverstub.h"
 #include "rpcprocedure.h"
 
 #include <json/json.h>
+
+
+void InitLogger()
+{
+	const char* consoleDetailParrten = "%d{%Y-%m-%d %H:%M:%S}%T[%p]%T[%c]%T%t%T%N%T%f:%l%T%m%n";
+	const char* consoleStdParrten = "[%p]%T%d{%Y-%m-%d %H:%M:%S}%T%t%T%N%T%m%n";
+	auto stdlogger = ASYNC_LOG_NAME("STD_LOGGER");
+	Nano::Log::LogFormatter::ptr stdFormat = std::make_shared<Nano::Log::LogFormatter>(consoleStdParrten);
+	Nano::Log::ANSIColorStdoutLogAppender::ptr stdAppender = std::make_shared<Nano::Log::ANSIColorStdoutLogAppender>();
+	stdAppender->setFormatter(stdFormat);
+	stdlogger->addAppender(stdAppender);
+	stdlogger->setLevel(Nano::Log::LogLevel::Level::DEBUG);
+}
 
 /// hello world test case once
 
