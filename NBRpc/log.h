@@ -27,7 +27,7 @@ namespace Nano {
 				if (logger->getLevel() >= level) \
 					Nano::Log::LogEventWrap(logger, \
 						std::make_shared<Nano::Log::LogEvent>(logger->getName(), level, __FILE__, __LINE__, \
-							Nano::Utils::GetThreadId(), time(0), sender)).getLogEvent()->getSS()
+							Nano::Log::getThreadId(), time(0), sender)).getLogEvent()->getSS()
 #define LOG_FATAL(logger,sender) LOG_LEVEL(logger, Nano::Log::LogLevel::Level::FATAL, sender)
 #define LOG_ERROR(logger,sender) LOG_LEVEL(logger, Nano::Log::LogLevel::Level::ERRO, sender)
 #define LOG_WARN(logger,sender) LOG_LEVEL(logger, Nano::Log::LogLevel::Level::WARN, sender)
@@ -39,7 +39,7 @@ namespace Nano {
 				if (logger->getLevel() >= level) \
 					Nano::Log::LogEventWrap(logger, \
 						std::make_shared<Nano::Log::LogEvent>(logger->getName(), level, __FILE__, __LINE__, \
-							Nano::Utils::GetThreadId(), time(0), sender)).getLogEvent()->printf(fmt, ##__VA_ARGS__)
+							Nano::Log::getThreadId(), time(0), sender)).getLogEvent()->printf(fmt, ##__VA_ARGS__)
 #define LOG_FMT_FATAL(logger,sender,fmt,...) LOG_FMT_LEVEL(logger, Nano::Log::LogLevel::Level::FATAL, sender, fmt, ##__VA_ARGS__)
 #define LOG_FMT_ERROR(logger,sender,fmt,...) LOG_FMT_LEVEL(logger, Nano::Log::LogLevel::Level::ERRO, sender, fmt, ##__VA_ARGS__)
 #define LOG_FMT_WARN(logger,sender,fmt,...) LOG_FMT_LEVEL(logger, Nano::Log::LogLevel::Level::WARN, sender, fmt, ##__VA_ARGS__)
@@ -54,7 +54,7 @@ namespace Nano {
 				if (logger->getLevel() >= level) \
 					Nano::Log::AsyncLogEventWrap(logger, \
 						std::make_shared<Nano::Log::LogEvent>(logger->getName(), level, __FILE__, __LINE__, \
-							Nano::Utils::GetThreadId(), time(0), sender)).getLogEvent()->getSS()
+							Nano::Log::getThreadId(), time(0), sender)).getLogEvent()->getSS()
 #define ASYNC_LOG_FATAL(logger,sender) ASYNC_LOG_LEVEL(logger, Nano::Log::LogLevel::Level::FATAL, sender)
 #define ASYNC_LOG_ERROR(logger,sender) ASYNC_LOG_LEVEL(logger, Nano::Log::LogLevel::Level::ERRO, sender)
 #define ASYNC_LOG_WARN(logger,sender) ASYNC_LOG_LEVEL(logger, Nano::Log::LogLevel::Level::WARN, sender)
@@ -66,7 +66,7 @@ namespace Nano {
 				if (logger->getLevel() >= level) \
 					Nano::Log::AsyncLogEventWrap(logger, \
 						std::make_shared<Nano::Log::LogEvent>(logger->getName(), level, __FILE__, __LINE__, \
-							Nano::Utils::GetThreadId(), time(0), sender)).getLogEvent()->printf(fmt, ##__VA_ARGS__)
+							Nano::Log::getThreadId(), time(0), sender)).getLogEvent()->printf(fmt, ##__VA_ARGS__)
 #define ASYNC_LOG_FMT_FATAL(logger,sender,fmt,...) ASYNC_LOG_FMT_LEVEL(logger, Nano::Log::LogLevel::Level::FATAL, sender, fmt, ##__VA_ARGS__)
 #define ASYNC_LOG_FMT_ERROR(logger,sender,fmt,...) ASYNC_LOG_FMT_LEVEL(logger, Nano::Log::LogLevel::Level::ERRO, sender, fmt, ##__VA_ARGS__)
 #define ASYNC_LOG_FMT_WARN(logger,sender,fmt,...) ASYNC_LOG_FMT_LEVEL(logger, Nano::Log::LogLevel::Level::WARN, sender, fmt, ##__VA_ARGS__)
