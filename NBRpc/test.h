@@ -47,7 +47,8 @@ void highConcurrencyClientStubHelloWorldTest() {
 	client->connect("127.0.0.1", 9800);
 	for (int i = 0; i < 100; i++) {
 		std::string id = std::to_string(i);
-		auto result = client->asyncRpcReturnCall_(id, "helloworldMethod", params, helloworldCallback, 1000);
+		std::cout << id << "send" << std::endl;
+		auto result = client->asyncRpcReturnCall(id, "helloworldMethod", params, helloworldCallback, 1000);
 	}
 	auto end = std::chrono::high_resolution_clock::now();
 	system("pause");
